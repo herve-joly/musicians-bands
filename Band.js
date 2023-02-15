@@ -1,9 +1,9 @@
 const { Sequelize, sequelize } = require("./db");
 
 // TODO - define the Band model
-let Band = sequalize.define("Band", {
-  name: DataTypes.STRING,
-  genre: DataTypes.STRING,
+let Band = sequelize.define("Band", {
+  name: Sequelize.STRING,
+  genre: Sequelize.STRING,
 });
 module.exports = {
   Band,
