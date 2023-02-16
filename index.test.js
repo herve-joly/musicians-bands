@@ -27,7 +27,7 @@ describe("Band and Musician Models", () => {
     // TODO - test creating a musician
     const testMusician = await Musician.create({
       name: "Musi Cian",
-      instrument: "Bass",
+      instruments: "Bass",
     });
     expect(testMusician.name).toBe("Musi Cian");
   });
@@ -37,8 +37,13 @@ describe("Band and Musician Models", () => {
       genre: "Rock",
       showCount: 3,
     });
-    const destroyBand = await testBand.destroy();
-    expect().toBe();
+    const testBand2 = await Band.create({
+      name: "Nicer Band",
+      genre: "Rock",
+      showCount: 4,
+    });
+    await Band.destroy({ where: { name: "Nice Band" } });
+    expect(await Band.findAll()).toHaveLength(1);
   });
   test("test update", async () => {
     const testBand = await Band.create({
@@ -46,10 +51,35 @@ describe("Band and Musician Models", () => {
       genre: "Rock",
       showCount: 3,
     });
-    const testBand2 = await testBand.update(
+    await testBand.update(
       { name: "New Band" },
       { where: { name: "Nice Band" } }
     );
     expect(testBand.name).toBe("New Band");
+  });
+  test("testing association", async () => {
+    const testMusician = await Musician.create({
+      name: "Musi Cian",
+      instruments: "Bass",
+    });
+    const testMusician2 = await Musician.create({
+      name: "Music Ian",
+      instruments: "Drums",
+    });
+    const testMusician3 = await Musician.create({
+      name: "Mus Ician",
+      instruments: "Guitar",
+    });
+    const testBand = await Band.create({
+      name: "Nice Band",
+      genre: "Rock",
+      showCount: 3,
+    });
+    await testBand.addMusician(testMusician);
+    await testBand.addMusician(testMusician2);
+    await testBand.addMusician(testMusician3);
+    const Musicians = await testBand.getMusicians();
+    const bands = await Band.findAll();
+    expect(Musicians.length).toBe(bands.length);
   });
 });
